@@ -1,0 +1,38 @@
+version: '3.7'
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: wp.Dockerfile
+    restart: always
+    ports:
+      - 8080:80
+    environment:
+      WORDPRESS_DB_HOST: db
+      WORDPRESS_DB_USER: dev
+      WORDPRESS_DB_PASSWORD: password
+      WORDPRESS_DB_NAME: wp
+    volumes:
+      - wordpress:/var/www/html
+
+  db:
+    image: mariadb:latest
+    restart: always
+    environment:
+      MYSQL_DATABASE: wp
+      MYSQL_USER: dev
+      MYSQL_PASSWORD: password
+      MYSQL_RANDOM_ROOT_PASSWORD: 'root'
+    volumes:
+      - db:/var/lib/mysql
+
+  adminer:
+    image: adminer:latest
+    restart: always
+    ports:
+      - 4000:8080
+
+volumes:
+  wordpress:
+  db:
